@@ -1,42 +1,82 @@
 const { ApolloServer, gql } = require('apollo-server');
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  scalar Date
+  
+  #input user
+  input UserInput {
+    id: Int!
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  #Create model User 
+  type User{
+    id: Int!
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+  }
+  type Post{
+    id: Int
+    author: User
+    comments: Post
+    content: String
+    createdAt: String
+    updatedAt: String
+  }
   type Query {
-    books: [Book]
+    users: [User]
+    posts: [Post]
+  }
+
+  type Mutation{
+    createUser(input: UserInput!):User
   }
 `;
 
-const books = [
+const users = [
     {
-      title: 'The Awakening',
-      author: 'Kate Chopin',
+      id: 1,
+      email: "laalala@gmail.com",
+      password: "aaaaaa",
+      firstName: "Pierre",
+      lastName: "le-sang",
     },
-    {
-      title: 'City of Glass',
-      author: 'Paul Auster',
-    },
-  ];
+];
+
+const posts = [
+  {
+    id: 1,
+    content: "Bonjour !!",
+    createdAt: "06/10/2021",
+    updatedAt: "06/10/2021",
+  },
+];
+function createUser(event, args){
+  //To do 
+  const fs = require('fs');
+  const fileName="bdd.json"
+  const data = fs.readFileSync(fileName);
+  var dataParse = JSON.parse(data);
+  dataParse.input.email="cou";
+  fs.writeFileSync(fileName,JSON.stringify(dataParse,null,4));
+}
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
     Query: {
-      books: () => books,
+      users: () => users,
+      posts:()=> posts,
+    },
+    Mutation:{
+      createUser: createUser
     },
   };
+
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
