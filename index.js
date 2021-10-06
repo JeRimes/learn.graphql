@@ -12,6 +12,13 @@ const typeDefs = gql`
     lastName: String!
   }
 
+  #input post
+  input PostInput{
+    id: Int
+    content: String!
+    createdAt: String
+    updatedAt: String
+  }
   #Create model User 
   type User{
     id: Int!
@@ -32,9 +39,10 @@ const typeDefs = gql`
     users: [User]
     posts: [Post]
   }
-
+  #, input: UserInput!,  inputComment:PostInput
   type Mutation{
     createUser(input: UserInput!):User
+    createPost(inputPost: PostInput!):Post
   }
 `;
 
@@ -57,23 +65,36 @@ const posts = [
   },
 ];
 function createUser(event, args){
-  //To do 
   const fs = require('fs');
   const fileName="bdd.json"
   const data = fs.readFileSync(fileName);
   var dataParse = JSON.parse(data);
-  dataParse.input.email="cou";
+  const users = dataParse.users;
+  console.log(dataParse.users);
+  users.push(args.input);
   fs.writeFileSync(fileName,JSON.stringify(dataParse,null,4));
 }
+function createPost(event, args){
+  const fs = require('fs');
+  const fileName="bdd.json"
+  const data = fs.readFileSync(fileName);
+  var dataParse = JSON.parse(data);
+  const posts = dataParse.posts;
+  console.log(args.inputPost)
+  posts.push(args.inputPost);
+  fs.writeFileSync(fileName,JSON.stringify(dataParse,null,4));
+}
+
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
     Query: {
       users: () => users,
-      posts:()=> posts,
+      posts:() => posts,
     },
     Mutation:{
-      createUser: createUser
+      createUser: createUser,
+      createPost: createPost
     },
   };
 

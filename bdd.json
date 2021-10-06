@@ -1,9 +1,23 @@
 {
-    "input": {
-        "email": "cou",
-        "firstName": "aaa",
-        "id": 0,
-        "lastName": "aa",
-        "password": "aaaaa"
-    }
+    "users": [
+        {
+            "email": "cou",
+            "firstName": "aaa",
+            "id": 0,
+            "lastName": "aa",
+            "password": "aaaaa"
+        },
+        {
+            "id": 0,
+            "email": "test123",
+            "password": "aaaaa",
+            "firstName": "aaa",
+            "lastName": "aa"
+        }
+    ],
+    "posts": [
+        {
+            "content": "teeets"
+        }
+    ]
 }
